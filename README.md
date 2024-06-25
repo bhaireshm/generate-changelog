@@ -52,7 +52,7 @@ The package also provides a CLI tool to generate the changelog directly from the
 #### Command
 
 ```bash
-@bhaireshm/gencl [options]
+gencl [options]
 ```
 
 #### Options
@@ -69,29 +69,29 @@ The package also provides a CLI tool to generate the changelog directly from the
 1. **Generate changelog from the first commit to HEAD:**
 
    ```bash
-   @bhaireshm/gencl
+   gencl
    ```
 
 2. **Generate changelog from a specific commit to HEAD:**
 
    ```bash
-   @bhaireshm/gencl --from abc1234
+   gencl --from abc1234
    ```
 
 3. **Generate changelog between two specific commits:**
 
    ```bash
-      @bhaireshm/gencl --from abc1234 --to def5678
+   gencl --from abc1234 --to def5678
    ```
 
 4. **Generate changelog in reverse order:**
 
    ```bash
-   @bhaireshm/gencl --from abc1234 --to def5678 --reverse
+   gencl --from abc1234 --to def5678 --reverse
    ```
 
 5. **Specify custom repository URL, file name, and changelog path:**
 
    ```bash
-   @bhaireshm/gencl --repoUrl https://github.com/username/repo --fileName MY_CHANGELOG.md --changelogPath /path/to/save
+   gencl --repoUrl https://github.com/username/repo --fileName MY_CHANGELOG.md --changelogPath /path/to/save
    ```
