@@ -1,0 +1,22 @@
+{
+  "name": "@bhaireshm/gen-changelog",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dist/index.js",
+  "bin": {
+    "gcl": "./dist/index.js"
+  },
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "watch": "rm -rf dist && tsc --build --watch"
+  },
+  "dependencies": {
+    "simple-git": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.8"
+  },
+  "keywords": [],
+  "author": "Bhairesh M <bhairesh@arithaconsulting.com>",
+  "license": "ISC"
+}
