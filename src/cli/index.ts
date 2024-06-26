@@ -33,5 +33,3 @@ const config = {
 
 const changelogGenerator = new ChangelogGenerator(config);
 changelogGenerator.generateChangelog(argv.from, argv.to);
-
-console.log('Terminal size: ' + process.stdout.columns + 'x' + process.stdout.rows);
