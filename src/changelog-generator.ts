@@ -7,6 +7,7 @@ export interface Config {
   fileName?: string;
   changelogPath?: string;
   reverse?: boolean;
+  title?: string;
 }
 
 export class ChangelogGenerator {
@@ -18,10 +19,11 @@ export class ChangelogGenerator {
   constructor(config: Config = {}) {
     this.defaultRepoUrl = this.getRepoUrl();
     this.config = {
-      repoUrl: config.repoUrl || this.defaultRepoUrl,
-      fileName: config.fileName || this.defaultFileName,
-      changelogPath: config.changelogPath || this.defaultChangelogPath,
-      reverse: config.reverse || false,
+      repoUrl: config.repoUrl ?? this.defaultRepoUrl,
+      fileName: config.fileName ?? this.defaultFileName,
+      changelogPath: config.changelogPath ?? this.defaultChangelogPath,
+      reverse: config.reverse ?? false,
+      title: config.title
     };
   }
 
@@ -40,7 +42,7 @@ export class ChangelogGenerator {
     const day = (`0${d.getDate()}`).slice(-2);
     const month = (`0${d.getMonth() + 1}`).slice(-2);
     const year = d.getFullYear();
-    return `Timeline: ${day}-${month}-${year}`;
+    return (this.config?.title as string)?.replace("{day}", day)?.replace("{month}", month)?.replace("{year}", year.toString());
   }
 
   private getRepoUrl(): string {
@@ -71,13 +73,14 @@ export class ChangelogGenerator {
 
   public generateChangelog(fromHash: string = '', toHash: string = 'HEAD'): void {
     if (!this.isGitRepository()) {
+      console.log("Not a git repository or no git binary found.")
       process.exit(1);
     }
 
     try {
       const from = fromHash || execSync('git rev-list --max-parents=0 HEAD').toString().trim();
       const to = toHash;
-      const repoUrl = this.config.repoUrl || this.defaultRepoUrl;
+      const repoUrl = this.config.repoUrl ?? this.defaultRepoUrl;
       const log = this.getGitLog(from, to);
 
       // Split the log into an array of commits
@@ -116,8 +119,9 @@ export class ChangelogGenerator {
         const shortHash = commit.hash.slice(0, 6);
         const commitUrl = `${repoUrl.replace(/\.git$/, '')}/commit/${commit.hash}`;
         const commitMessageTitle = commit.message.split('\n')[0].replace(/- /g, "\n  - ");
-        const commitMessageBody = commit.message.split('\n').slice(1).map(line => `  - ${line}`).join('\n');
-        const commitEntry = `- [${shortHash}](${commitUrl}) ${commitMessageTitle}\n${commitMessageBody ? `${commitMessageBody}\n` : ''}`;
+        let commitMessageBody = commit.message.split('\n').slice(1).map(line => `  - ${line}`).join('\n');
+        commitMessageBody = commitMessageBody ? `${commitMessageBody}\n` : '';
+        const commitEntry = `- [${shortHash}](${commitUrl}) ${commitMessageTitle}\n${commitMessageBody}`;
         dateSection += commitEntry;
       });
 

@@ -29,6 +29,7 @@ const config = {
   fileName: argv.fileName,
   changelogPath: argv.changelogPath,
   reverse: argv.reverse,
+  title: argv.title
 };
 
 const changelogGenerator = new ChangelogGenerator(config);

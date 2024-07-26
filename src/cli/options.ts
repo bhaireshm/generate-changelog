@@ -34,6 +34,12 @@ const OPTIONS: Record<string, any> = {
     description: 'The path to save the changelog file',
     default: process.cwd(),
   },
+  title: {
+    alias: 'l',
+    type: 'string',
+    description: 'Title/Label of the changelog',
+    default: 'Timeline: {day}-{month}-{year}',
+  },
 };
 
 export default OPTIONS;
