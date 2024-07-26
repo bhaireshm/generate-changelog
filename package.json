@@ -4,7 +4,8 @@
   "description": "A simple and efficient tool to generate a `CHANGELOG.md` file for your Git repository",
   "main": "./dist/src/index.js",
   "bin": {
-    "gencl": "./dist/src/cli/index.js"
+    "gencl": "./dist/src/cli/index.js",
+    "generate-changelog": "./dist/src/cli/index.js"
   },
   "scripts": {
     "start": "node ./dist/index.js",

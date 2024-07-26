@@ -3,8 +3,8 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import pkg from "../../package.json";
-import OPTIONS from "./options";
 import ChangelogGenerator from '../changelog-generator';
+import OPTIONS from "./options";
 
 const argv: any = yargs(hideBin(process.argv))
   .version(pkg.version).alias('version', 'v')
@@ -33,4 +33,4 @@ const config = {
 };
 
 const changelogGenerator = new ChangelogGenerator(config);
-changelogGenerator.generateChangelog(argv.from, argv.to);
+changelogGenerator.generateChangelog({ fromHash: argv.from, toHash: argv.to });

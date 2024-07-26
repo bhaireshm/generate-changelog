@@ -26,7 +26,7 @@ You can use the `generateChangelog` function in your Node.js scripts to generate
 #### Function Signature
 
 ```typescript
-generateChangelog(fromHash: string = '', toHash: string = 'HEAD'): void
+generateChangelog(fromHash = '', toHash = 'HEAD'): void
 ```
 
 #### Example
@@ -39,10 +39,11 @@ const config = {
   fileName: "MY_CHANGELOG.md",
   changelogPath: "/path/to/save",
   reverse: true,
+  title: "My Changelog",
 };
 
 const changelogGenerator = new ChangelogGenerator(config);
-changelogGenerator.generateChangelog("abc1234", "def5678");
+changelogGenerator.generateChangelog({ fromHash: "abc1234", toHash: "def5678" });
 ```
 
 ### Using the CLI
@@ -63,6 +64,7 @@ gencl [options]
 - `--repoUrl, -u`: The repository URL.
 - `--fileName, -n`: The name of the changelog file. Defaults to `CHANGELOG.md`.
 - `--changelogPath, -p`: The path to save the changelog file. Defaults to the current directory.
+- `--title, -l`: Title/Label of the changelog. Defaults to `Timeline: {day}-{month}-{year}`.
 
 #### Examples
 
