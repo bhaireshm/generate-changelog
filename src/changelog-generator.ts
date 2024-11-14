@@ -8,6 +8,8 @@ export interface Config {
   changelogPath?: string;
   reverse?: boolean;
   title?: string;
+  remoteName?: string;
+  rangeOperator?: "..." | ".." | "space";
 }
 
 type GenerateChangelogOptions = {
@@ -17,18 +19,23 @@ type GenerateChangelogOptions = {
 
 export class ChangelogGenerator {
   private config: Config;
-  private defaultRepoUrl: string;
-  private defaultFileName: string = "CHANGELOG.md";
-  private defaultChangelogPath: string = process.cwd();
+  private readonly defaultCofig: Config = {
+    fileName: "CHANGELOG.md",
+    changelogPath: process.cwd(),
+    reverse: false,
+    remoteName: "origin",
+    rangeOperator: "space"
+  };
 
-  constructor(config: Config = {}) {
-    this.defaultRepoUrl = this.getRepoUrl();
+  constructor(config: Config) {
     this.config = {
-      repoUrl: config.repoUrl ?? this.defaultRepoUrl,
-      fileName: config.fileName ?? this.defaultFileName,
-      changelogPath: config.changelogPath ?? this.defaultChangelogPath,
-      reverse: config.reverse ?? false,
-      title: config.title
+      repoUrl: this.getRepoUrl(config.repoUrl),
+      fileName: config.fileName ?? this.defaultCofig.fileName,
+      changelogPath: config.changelogPath ?? this.defaultCofig.changelogPath,
+      reverse: config.reverse ?? this.defaultCofig.reverse,
+      title: config.title ?? this.defaultCofig.title,
+      remoteName: config.remoteName ?? this.defaultCofig.remoteName,
+      rangeOperator: config.rangeOperator ?? this.defaultCofig.rangeOperator
     };
   }
 
@@ -50,9 +57,9 @@ export class ChangelogGenerator {
     return (this.config?.title as string)?.replace("{day}", day)?.replace("{month}", month)?.replace("{year}", year.toString());
   }
 
-  private getRepoUrl(): string {
+  private getRepoUrl(remoteName = this.defaultCofig.remoteName): string {
     try {
-      return execSync("git config --get remote.origin.url").toString().trim();
+      return execSync(`git config --get remote.${remoteName}.url`).toString().trim();
     } catch (error) {
       console.error("Failed to get the repository URL.");
       process.exit(1);
@@ -61,7 +68,8 @@ export class ChangelogGenerator {
 
   private getGitLog(from: string, to: string): string {
     try {
-      return execSync(`git log ${from}..${to} --pretty=format:"%H%x09%ad%x09%s" --date=iso`).toString().trim();
+      const rangeOperator = this.config.rangeOperator === "space" ? " " : this.config.rangeOperator;
+      return execSync(`git log ${from}${rangeOperator}${to} --pretty=format:"%H%x09%ad%x09%s" --date=iso`).toString().trim();
     } catch (error) {
       console.error("Failed to get the git log.");
       process.exit(1);
@@ -87,7 +95,7 @@ export class ChangelogGenerator {
     try {
       const from = fromHash || execSync("git rev-list --max-parents=0 HEAD").toString().trim();
       const to = toHash;
-      const repoUrl = this.config.repoUrl ?? this.defaultRepoUrl;
+      const repoUrl = this.config.repoUrl!;
       const log = this.getGitLog(from, to);
 
       // Split the log into an array of commits

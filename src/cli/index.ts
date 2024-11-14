@@ -24,13 +24,5 @@ const argv: any = yargs(hideBin(process.argv))
   .help('h').alias('h', 'help')
   .argv;
 
-const config = {
-  repoUrl: argv.repoUrl,
-  fileName: argv.fileName,
-  changelogPath: argv.changelogPath,
-  reverse: argv.reverse,
-  title: argv.title
-};
-
-const changelogGenerator = new ChangelogGenerator(config);
+const changelogGenerator = new ChangelogGenerator(argv);
 changelogGenerator.generateChangelog({ fromHash: argv.from, toHash: argv.to });

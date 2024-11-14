@@ -40,6 +40,19 @@ const OPTIONS: Record<string, any> = {
     description: 'Title/Label of the changelog',
     default: 'Timeline: {day}-{month}-{year}',
   },
+  remoteName: {
+    alias: 'm',
+    type: 'string',
+    description: 'The name of the remote',
+    default: 'origin',
+  },
+  rangeOperator: {
+    alias: 'o',
+    type: 'string',
+    description: 'The range operator to use for the git log command',
+    choices: ["...", "..", "space"],
+    default: '..',
+  },
 };
 
 export default OPTIONS;
