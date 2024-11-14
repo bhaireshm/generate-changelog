@@ -8,6 +8,7 @@ A simple and efficient tool to generate a `CHANGELOG.md` file for your Git repos
 - Supports specifying a range of commits.
 - Option to reverse the order of commits.
 - Customizable repository URL, file name, changelog path, and title format.
+- Supports multiple range operators ("...", "..", "space") for specifying commit ranges.
 
 ## Installation
 
@@ -40,6 +41,8 @@ const config = {
   changelogPath: "/path/to/save",
   reverse: true,
   title: "My Changelog",
+  remoteName: "origin",
+  rangeOperator: "...",
 };
 
 const changelogGenerator = new ChangelogGenerator(config);
@@ -48,52 +51,50 @@ changelogGenerator.generateChangelog({ fromHash: "abc1234", toHash: "def5678" })
 
 ### Using the CLI
 
-The package also provides a CLI tool to generate the changelog directly from the command line.
+You can also use the CLI to generate a changelog. The available options are:
 
-#### Command
+| Option            | Alias | Description                          | Default                        |
+| ----------------- | ----- | ------------------------------------ | ------------------------------ |
+| `--from`          | `-f`  | The starting commit hash.            | empty string                   |
+| `--to`            | `-t`  | The ending commit hash.              | HEAD                           |
+| `--reverse`       | `-r`  | Reverse the order of commits.        | false                          |
+| `--repoUrl`       | `-u`  | The repository URL.                  | remote.{remoteName}.url        |
+| `--fileName`      | `-n`  | The name of the changelog file.      | CHANGELOG.md                   |
+| `--changelogPath` | `-p`  | The path to save the changelog file. | current working directory      |
+| `--title`         | `-l`  | The title of the changelog.          | Timeline: {day}-{month}-{year} |
+| `--remoteName`    | `-m`  | The name of the remote.              | origin                         |
+| `--rangeOperator` | `-o`  | The range operator to use.           | space                          |
+
+### CLI Examples
+
+#### Simple Example
+
+Generate a changelog from the last commit to the current commit:
 
 ```bash
-gencl [options]
+gencl -f HEAD~1 -t HEAD
 ```
 
-#### Options
+#### Custom Repository URL and File Name
 
-- `--from, -f`: The starting commit hash. Defaults to the first commit if not provided.
-- `--to, -t`: The ending commit hash. Defaults to `HEAD` if not provided.
-- `--reverse, -r`: If set to `true`, the commit order will be reversed (latest commits first).
-- `--repoUrl, -u`: The repository URL.
-- `--fileName, -n`: The name of the changelog file. Defaults to `CHANGELOG.md`.
-- `--changelogPath, -p`: The path to save the changelog file. Defaults to the current directory.
-- `--title, -l`: Title/Label of the changelog. Defaults to `Timeline: {day}-{month}-{year}`.
+Generate a changelog with a custom repository URL and file name:
 
-#### Examples
+```bash
+gencl -f abc1234 -t def5678 -u https://github.com/username/repo -n MY_CHANGELOG.md
+```
 
-1. **Generate changelog from the first commit to HEAD:**
+#### Reverse Order and Custom Title
 
-   ```bash
-   gencl
-   ```
+Generate a changelog with the commits in reverse order and a custom title:
 
-2. **Generate changelog from a specific commit to HEAD:**
+```bash
+gencl -f abc1234 -t def5678 -r -l "My Changelog"
+```
 
-   ```bash
-   gencl --from abc1234
-   ```
+#### Custom Range Operator
 
-3. **Generate changelog between two specific commits:**
+Generate a changelog using a custom range operator:
 
-   ```bash
-   gencl --from abc1234 --to def5678
-   ```
-
-4. **Generate changelog in reverse order:**
-
-   ```bash
-   gencl --from abc1234 --to def5678 --reverse
-   ```
-
-5. **Specify custom repository URL, file name, and changelog path:**
-
-   ```bash
-   gencl --repoUrl https://github.com/username/repo --fileName MY_CHANGELOG.md --changelogPath /path/to/save
-   ```
+```bash
+gencl -f abc1234 -t def5678 -o "..."
+```
